@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: html-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: html-demo   # 1. This must match...
+  template:
+    metadata:
+      labels:
+        app: html-demo # ...2. This exactly.
+    spec:
+      containers:      # 3. This section was reported missing
+      - name: html-demo-container
+        image: tejasc0124/html-demo:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: html-demo-service
+spec:
+  selector:
+    app: html-demo
+  ports:               # 4. This section was reported missing
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
