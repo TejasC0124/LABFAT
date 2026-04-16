@@ -1,3 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: html-content
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Gold-Rate-Graph</title>
+            <style>
+            body{
+                text-align:center;
+                font-family:Times New Roman;
+                background-color:#af0d0d;
+            }
+            h1{
+                color:#0ef777;
+            }
+            </style>
+            </head>
+    <body>
+        <div style="width: 80%; margin: auto;">
+            <h2>Gold Rate Trend (Random Data)</h2>
+            <img src="Figure_1.png">Figure</img>
+        </div>
+    </body>
+    </html>
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,17 +35,25 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: html-demo   # 1. This must match...
+      app: html-demo   
   template:
     metadata:
       labels:
-        app: html-demo # ...2. This exactly.
+        app: html-demo 
     spec:
-      containers:      # 3. This section was reported missing
+      containers:     
       - name: html-demo-container
-        image: tejasc0124/html-demo:latest
+        image: nginx:alpine  # Using standard nginx to serve the injected file
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: html-content
 ---
 apiVersion: v1
 kind: Service
@@ -25,7 +62,7 @@ metadata:
 spec:
   selector:
     app: html-demo
-  ports:               # 4. This section was reported missing
+  ports:               
     - protocol: TCP
       port: 80
       targetPort: 80
