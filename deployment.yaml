@@ -2,31 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: html-content
-data:
-  index.html: |
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>Gold-Rate-Graph</title>
-            <style>
-            body{
-                text-align:center;
-                font-family:Times New Roman;
-                background-color:#af0d0d;
-            }
-            h1{
-                color:#0ef777;
-            }
-            </style>
-            </head>
-    <body>
-        <div style="width: 80%; margin: auto;">
-            <h2>Gold Rate Trend (Random Data)</h2>
-            <img src="Figure_1.png">Figure</img>
-        </div>
-    </body>
-    </html>
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -64,6 +39,6 @@ spec:
     app: html-demo
   ports:               
     - protocol: TCP
-      port: 80
+      port: 800
       targetPort: 80
   type: LoadBalancer
